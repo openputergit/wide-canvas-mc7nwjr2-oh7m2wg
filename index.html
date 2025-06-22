@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Baacha ❤️</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --clay-background: rgba(255, 255, 255, 0.7);
+            --clay-shadow: 16px 16px 32px #c8d0e7, -16px -16px 32px #fafbff;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(45deg, #ffecf2, #e6e9ff, #f0e6ff, #ffe6f2);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            min-height: 100vh;
+        }
+
+        .handwritten {
+            font-family: 'Dancing Script', cursive;
+        }
+
+        .clay-card {
+            background: var(--clay-background);
+            border-radius: 30px;
+            box-shadow: var(--clay-shadow);
+            transition: transform 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .clay-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        .sparkle {
+            position: absolute;
+            pointer-events: none;
+            background: white;
+            border-radius: 50%;
+            animation: sparkle 1.5s linear forwards;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes floating {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes sparkle {
+            0% { transform: scale(0); opacity: 1; }
+            100% { transform: scale(1); opacity: 0; }
+        }
+
+        .heart {
+            position: fixed;
+            animation: floatHeart 4s ease-in-out infinite;
+            opacity: 0.6;
+            z-index: -1;
+        }
+
+        @keyframes floatHeart {
+            0% { transform: translateY(100vh) scale(0); }
+            100% { transform: translateY(-100px) scale(1); }
+        }
+
+        .section {
+            min-height: 100vh;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .section.active {
+            opacity: 1;
+        }
+
+        #audio-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body class="relative overflow-x-hidden">
+    <div id="audio-control" class="clay-card p-3 cursor-pointer">
+        <i class="bi bi-music-note text-2xl text-pink-500"></i>
+    </div>
+
+    <audio id="bgMusic" loop>
+        <source src="https://www.chosic.com/wp-content/uploads/2021/05/Melody-of-Nature.mp3" type="audio/mp3">
+    </audio>
+
+    <!-- Sections will be generated dynamically via JavaScript -->
+    <div id="content" class="container mx-auto px-4"></div>
+
+    <script type="module">
+        const sections = [
+            {
+                id: 'welcome',
+                content: `
+                    <div class="flex flex-col items-center justify-center min-h-screen text-center">
+                        <h1 class="handwritten text-4xl md:text-6xl text-pink-600 mb-8 floating">Are you beautiful, Baacha?</h1>
+                        <button class="clay-card px-8 py-4 text-xl text-pink-500 hover:text-pink-600 transition-all duration-300">
+                            Yes, obviously ✨
+                        </button>
+                    </div>
+                `
+            },
+            // Add other sections similarly
+        ];
+
+        let currentSection = 0;
+
+        function createHearts() {
+            const heart = document.createElement('div');
+            heart.innerHTML = '❤️';
+            heart.className = 'heart';
+            heart.style.left = Math.random() * window.innerWidth + 'px';
+            heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+            document.body.appendChild(heart);
+            
+            setTimeout(() => heart.remove(), 4000);
+        }
+
+        function createSparkles(event) {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            sparkle.style.left = event.clientX + 'px';
+            sparkle.style.top = event.clientY + 'px';
+            sparkle.style.width = '2px';
+            sparkle.style.height = '2px';
+            document.body.appendChild(sparkle);
+            
+            setTimeout(() => sparkle.remove(), 1500);
+        }
+
+        setInterval(createHearts, 300);
+        document.addEventListener('mousemove', createSparkles);
+
+        const audioControl = document.getElementById('audio-control');
+        const bgMusic = document.getElementById('bgMusic');
+        let isPlaying = false;
+
+        audioControl.addEventListener('click', () => {
+            if (isPlaying) {
+                bgMusic.pause();
+                audioControl.innerHTML = '<i class="bi bi-music-note text-2xl text-pink-500"></i>';
+            } else {
+                bgMusic.play();
+                audioControl.innerHTML = '<i class="bi bi-music-note-beamed text-2xl text-pink-500"></i>';
+            }
+            isPlaying = !isPlaying;
+        });
+
+        // Initialize the page with the first section
+        document.getElementById('content').innerHTML = sections[0].content;
+    </script>
+<script>document.body.addEventListener('wheel', e => { if (!e.ctrlKey) return; e.preventDefault(); return }, { passive: false })</script>
+	</body>
+</html>
